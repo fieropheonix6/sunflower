@@ -23,16 +23,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.samples.apps.sunflower.BuildConfig
-import com.google.samples.apps.sunflower.PlantDetailFragment
 import com.google.samples.apps.sunflower.data.GardenPlantingRepository
 import com.google.samples.apps.sunflower.data.PlantRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.text.Typography.dagger
 
 /**
- * The ViewModel used in [PlantDetailFragment].
+ * The ViewModel used in [PlantDetailsScreen].
  */
 @HiltViewModel
 class PlantDetailViewModel @Inject constructor(
@@ -43,7 +43,12 @@ class PlantDetailViewModel @Inject constructor(
 
     val plantId: String = savedStateHandle.get<String>(PLANT_ID_SAVED_STATE_KEY)!!
 
-    val isPlanted = gardenPlantingRepository.isPlanted(plantId).asLiveData()
+    val isPlanted = gardenPlantingRepository.isPlanted(plantId)
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            false
+        )
     val plant = plantRepository.getPlant(plantId).asLiveData()
 
     private val _showSnackbar = MutableLiveData(false)

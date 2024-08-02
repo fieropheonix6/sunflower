@@ -15,19 +15,16 @@
  */
 
 plugins {
-  id("com.android.application")
-  id("kotlin-android")
-  id("kotlin-parcelize")
-  id("kotlin-kapt")
-  id("dagger.hilt.android.plugin")
-  id("androidx.navigation.safeargs.kotlin")
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.hilt)
+  alias(libs.plugins.compose.compiler)
 }
 
 android {
   compileSdk = libs.versions.compileSdk.get().toInt()
-  buildFeatures {
-    dataBinding = true
-  }
+
   defaultConfig {
     applicationId = "com.google.samples.apps.sunflower"
     minSdk = libs.versions.minSdk.get().toInt()
@@ -61,13 +58,13 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
   }
 
   kotlinOptions {
     // work-runtime-ktx 2.1.0 and above now requires Java 8
-    jvmTarget = "1.8"
+    jvmTarget = JavaVersion.VERSION_17.toString()
 
     // Enable Coroutines and Flow APIs
     freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
@@ -76,9 +73,7 @@ android {
   buildFeatures {
     compose = true
     dataBinding = true
-  }
-  composeOptions {
-    kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    buildConfig = true
   }
   packagingOptions {
     // Multiple dependency bring these files in. Exclude them to enable
@@ -98,22 +93,26 @@ android {
       }
     }
   }
+  namespace = "com.google.samples.apps.sunflower"
+}
+
+androidComponents {
+  onVariants(selector().withBuildType("release")) {
+    // Only exclude *.version files in release mode as debug mode requires
+    // these files for layout inspector to work.
+    it.packaging.resources.excludes.add("META-INF/*.version")
+  }
 }
 
 dependencies {
-  kapt(libs.androidx.room.compiler)
-  kapt(libs.hilt.android.compiler)
-  implementation(libs.androidx.appcompat)
-  implementation(libs.androidx.constraintlayout)
+  ksp(libs.androidx.room.compiler)
+  ksp(libs.hilt.android.compiler)
   implementation(libs.androidx.core.ktx)
-  implementation(libs.androidx.fragment.ktx)
   implementation(libs.androidx.lifecycle.livedata.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
-  implementation(libs.androidx.navigation.fragment.ktx)
-  implementation(libs.androidx.navigation.ui.ktx)
-  implementation(libs.androidx.paging.runtime.ktx)
+  implementation(libs.androidx.navigation.compose)
+  implementation(libs.androidx.paging.compose)
   implementation(libs.androidx.room.ktx)
-  implementation(libs.androidx.viewpager2)
   implementation(libs.androidx.work.runtime.ktx)
   implementation(libs.material)
   implementation(libs.gson)
@@ -123,27 +122,31 @@ dependencies {
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.hilt.android)
+  implementation(libs.hilt.navigation.compose)
   implementation(libs.androidx.profileinstaller)
-  implementation(libs.androidx.tracing.ktx)
 
   // Compose
+  implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.constraintlayout.compose)
   implementation(libs.androidx.compose.runtime)
   implementation(libs.androidx.compose.ui)
   implementation(libs.androidx.compose.foundation)
   implementation(libs.androidx.compose.foundation.layout)
-  implementation(libs.androidx.compose.material)
+  implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.compose.ui.viewbinding)
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.compose.runtime.livedata)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
-  implementation(libs.material.compose.theme.adapter)
-  implementation(libs.coil.compose)
+  implementation(libs.androidx.lifecycle.runtime.compose)
+  implementation(libs.glide)
+  implementation(libs.accompanist.systemuicontroller)
   debugImplementation(libs.androidx.compose.ui.tooling)
 
   // Testing dependencies
-  kaptAndroidTest(libs.hilt.android.compiler)
+  debugImplementation(libs.androidx.monitor)
+  kspAndroidTest(libs.hilt.android.compiler)
+  androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.arch.core.testing)
   androidTestImplementation(libs.androidx.espresso.contrib)
   androidTestImplementation(libs.androidx.espresso.core)
@@ -151,8 +154,8 @@ dependencies {
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.androidx.test.uiautomator)
   androidTestImplementation(libs.androidx.work.testing)
-  androidTestImplementation(libs.truth)
   androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+  androidTestImplementation(libs.guava)
   androidTestImplementation(libs.hilt.android.testing)
   androidTestImplementation(libs.accessibility.test.framework)
   androidTestImplementation(libs.kotlinx.coroutines.test)

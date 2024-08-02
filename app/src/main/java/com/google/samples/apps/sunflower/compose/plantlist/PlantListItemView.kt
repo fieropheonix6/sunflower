@@ -16,66 +16,62 @@
 
 package com.google.samples.apps.sunflower.compose.plantlist
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.data.Plant
+import com.google.samples.apps.sunflower.data.UnsplashPhoto
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PlantListItemView(plant: Plant, onClick: () -> Unit) {
+fun PlantListItem(plant: Plant, onClick: () -> Unit) {
+    ImageListItem(name = plant.name, imageUrl = plant.imageUrl, onClick = onClick)
+}
+
+@Composable
+fun PhotoListItem(photo: UnsplashPhoto, onClick: () -> Unit) {
+    ImageListItem(name = photo.user.name, imageUrl = photo.urls.small, onClick = onClick)
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun ImageListItem(name: String, imageUrl: String, onClick: () -> Unit) {
     Card(
         onClick = onClick,
-        elevation = dimensionResource(id = R.dimen.card_elevation),
-        shape = RoundedCornerShape(
-            topStart = 0.dp,
-            topEnd = dimensionResource(id = R.dimen.card_corner_radius),
-            bottomStart = dimensionResource(id = R.dimen.card_corner_radius),
-            bottomEnd = 0.dp
-        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .padding(horizontal = dimensionResource(id = R.dimen.card_side_margin))
             .padding(bottom = dimensionResource(id = R.dimen.card_bottom_margin))
     ) {
         Column(Modifier.fillMaxWidth()) {
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(plant.imageUrl)
-                    .crossfade(true)
-                    .build()
-            )
-            Image(
-                painter = painter,
-                contentScale = ContentScale.Crop,
+            GlideImage(
+                model = imageUrl,
                 contentDescription = stringResource(R.string.a11y_plant_item_image),
-                modifier = Modifier
+                Modifier
                     .fillMaxWidth()
-                    .height(dimensionResource(id = R.dimen.plant_item_image_height))
+                    .height(dimensionResource(id = R.dimen.plant_item_image_height)),
+                contentScale = ContentScale.Crop
             )
             Text(
-                text = plant.name,
+                text = name,
                 textAlign = TextAlign.Center,
+                maxLines = 1,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = dimensionResource(id = R.dimen.margin_normal))

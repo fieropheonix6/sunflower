@@ -1,34 +1,28 @@
 # Android Sunflower with Compose
 
-A gardening app illustrating Android development best practices with migrating
-a View-based app to Jetpack Compose.
+Warning: The Sunflower repository is no longer under maintenance, We are prioritizing https://github.com/android/compose-samples as the up-to-date source of truth for Compose best practises. Please use that repository and sample set to continue learning about Jetpack Compose. If you'd like to continue using Sunflower, we encourage you to maintain your own fork of the sample. 
 
-This sample showcases:
-* Compose working in an existing app: including integration with strings, resources, and themes and styles.
-* Integration with an existing architecture based on Jetpack libraries.
-* `CollapsingToolbarLayout` behavior implemented manually with Compose.
-* Showing [Snackbars](https://material.io/components/snackbars) with Compose.
-* Using Compose within a `RecyclerView`
+A gardening app illustrating Android development best practices with migrating a View-based app to
+Jetpack Compose. To learn about how Sunflower was migrated to Compose, see the 
+[migration journey](https://github.com/android/sunflower/blob/main/docs/MigrationJourney.md) document.
 
-**Note**: To see the original View implementation of Sunflower, checkout the [`views`](https://github.com/android/sunflower/tree/views) branch.
+> [!Note]
+> To see the original View implementation of Sunflower, checkout the [`views`](https://github.com/android/sunflower/tree/views) branch.
 
 ## Screenshots
 
-<img src="screenshots/sunflower.gif"/>
+<img src="screenshots/SunflowerM3Screenshots.png"/>
 
 ## Features
 
-Sunflower's [plant details screen](app/src/main/java/com/google/samples/apps/sunflower/PlantDetailFragment.kt)
-is built with Compose as well as the [plant list item](app/src/main/java/com/google/samples/apps/sunflower/compose/plantlist/PlantListItemView.kt)
-view within a `RecyclerView`.
+This sample showcases how to migrate an existing View-based app (Material 2) to Compose (Material 3). 
+See the linked migration journey doc above to learn more.
 
-All Compose code can be found in the `compose`
-[folder](app/src/main/java/com/google/samples/apps/sunflower/compose).
-
-**Note**: As Compose cannot render HTML code in `Text` yet. The 
-`AndroidViewBinding` API is used to embed a `TextView` in Compose. See the 
-`PlantDescription` composable in the
-[PlantDetailView file](app/src/main/java/com/google/samples/apps/sunflower/compose/plantdetail/PlantDetailView.kt).
+> [!Note]
+> As Compose cannot render HTML code in `Text` yet. The 
+> `AndroidViewBinding` API is used to embed a `TextView` in Compose. See the 
+> `PlantDescription` composable in the
+> [PlantDetailView file](app/src/main/java/com/google/samples/apps/sunflower/compose/plantdetail/PlantDetailView.kt).
 
 ## Requirements
 
@@ -97,23 +91,3 @@ Third Party Content
 Select text used for describing the plants (in `plants.json`) are used from Wikipedia via CC BY-SA 3.0 US (license in `ASSETS_LICENSE`).
 
 "[seed](https://thenounproject.com/search/?q=seed&i=1585971)" by [Aisyah](https://thenounproject.com/aisyahalmasyira/) is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/us/legalcode)
-
-License
--------
-
-Copyright 2018 Google, Inc.
-
-Licensed to the Apache Software Foundation (ASF) under one or more contributor
-license agreements.  See the NOTICE file distributed with this work for
-additional information regarding copyright ownership.  The ASF licenses this
-file to you under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License.  You may obtain a copy of
-the License at
-
-  https://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.

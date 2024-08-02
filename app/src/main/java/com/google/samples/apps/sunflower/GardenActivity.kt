@@ -17,21 +17,26 @@
 package com.google.samples.apps.sunflower
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.databinding.DataBindingUtil.setContentView
-import com.google.samples.apps.sunflower.databinding.ActivityGardenBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import com.google.samples.apps.sunflower.compose.SunflowerApp
+import com.google.samples.apps.sunflower.ui.SunflowerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class GardenActivity : AppCompatActivity() {
+class GardenActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Displaying edge-to-edge
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        setContentView<ActivityGardenBinding>(this, R.layout.activity_garden)
+        enableEdgeToEdge()
+        setContent {
+            SunflowerTheme {
+                SunflowerApp()
+            }
+        }
+        
     }
 }
